@@ -1,6 +1,6 @@
-#define encoderPinA 3
-#define encoderPinB 4
-#define encoderBoton 5
+#define encoderPinA 2
+#define encoderPinB 3
+#define encoderBoton 4
 
 unsigned int flag = 0;
 unsigned int seleccion = 1; // Seleccion de item
