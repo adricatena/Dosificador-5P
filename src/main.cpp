@@ -2,6 +2,7 @@
 #include "globales.h"
 #include "pantalla.h"
 #include <EEPROM.h>
+#include <HX711.h>
 
 void setup()
 {
@@ -89,6 +90,8 @@ void loop()
           flag = 200; // ir a Mostrar Menu Recetas
         else if (seleccion == 2)
           flag = 300; // ir a Mostrar Menu Marcha
+        else if (seleccion == 3)
+          flag = 400; // ir a Mostrar Menu Lavado
       }
     }
     break;
@@ -168,13 +171,18 @@ void loop()
       flag = 200;                             // ir a Mostrar Menu Recetas
     break;
   case 212: // Accion de agregar receta
-    drawPrueba();
+    drawMensaje1(); // 'No apoyar envases, destarando...'
+    
     delay(6000);
     flag = 200;
     break;
   case 220: // Mostrar Mostrar Recetas
     break;
   case 230: // Mostrar Eliminar Recetas
+    break;
+  case 300: // Menu Marcha
+    break;
+  case 400: // Menu Lavado
     break;
   default:
     break;

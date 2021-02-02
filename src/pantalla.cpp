@@ -205,3 +205,14 @@ void drawPrueba()
     u8g2.drawStr(centroX, centroY, "PRUEBA"); // write something to the internal memory
     u8g2.sendBuffer();
 }
+
+void drawMensaje1(){
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    u8g2.drawStr(1, u8g2.getAscent() + 1, "NO APOYE NINGUN");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 2, "ENVASE SOBRE LA");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 3, "BALANZA.");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 5, "DESTARANDO...");
+    u8g2.sendBuffer();
+}
