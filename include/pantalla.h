@@ -6,3 +6,4 @@ void drawMenuRecetas();
 void drawMaximoRecetas();
 void drawInstruccionesAgregarReceta();
 void drawPrueba();
+void drawMensaje1();
