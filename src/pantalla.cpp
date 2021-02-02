@@ -38,13 +38,16 @@ void drawMenuPrincipal()
     u8g2.clearDisplay();
     u8g2.setFont(u8g2_font_profont17_tr);
     alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    altoFila = alturaConTitulo / 3 - 1;
     int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("MENU PRINCIPAL")) / 2;
     int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("RECETAS")) / 2;
     int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("MARCHA")) / 2;
+    int x3 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("LAVADO")) / 2;
     u8g2.drawStr(centroX, u8g2.getAscent() + 1, "MENU PRINCIPAL");
     u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
-    u8g2.drawStr(x1, u8g2.getAscent() + 1 + (alturaConTitulo / 2 - u8g2.getAscent() * 0.5), "RECETAS");
-    u8g2.drawStr(x2, u8g2.getAscent() + 1 + (alturaConTitulo / 2 + u8g2.getAscent() * 1.5), "MARCHA");
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila, "RECETAS");
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 2, "MARCHA");
+    u8g2.drawStr(x3, u8g2.getAscent() + 1 + altoFila * 3, "LAVADO");
     u8g2.sendBuffer();
 }
 
@@ -73,6 +76,30 @@ void drawSelector(int cantidad, int seleccion)
         }
         break;
     case 3:
+        y1 = u8g2.getAscent()+1 + ((alturaConTitulo-1)/3) - alto; // desfazaje del titulo + division dinamica - altura del cuadrado
+        y2 = u8g2.getAscent()+1 + ((alturaConTitulo-1)/3)*2 - alto;
+        y3 = u8g2.getAscent()+1 + ((alturaConTitulo-1)/3)*3 - alto;
+        if (seleccion == 1)
+        {
+            u8g2.drawBox(1, y1, alto, alto);
+            u8g2.drawFrame(1, y2, alto, alto);
+            u8g2.drawFrame(1, y3, alto, alto);
+            u8g2.sendBuffer();
+        }
+        else if (seleccion == 2)
+        {
+            u8g2.drawFrame(1, y1, alto, alto);
+            u8g2.drawBox(1, y2, alto, alto);
+            u8g2.drawFrame(1, y3, alto, alto);
+            u8g2.sendBuffer();
+        }
+        else if (seleccion == 3)
+        {
+            u8g2.drawFrame(1, y1, alto, alto);
+            u8g2.drawFrame(1, y2, alto, alto);
+            u8g2.drawBox(1, y3, alto, alto);
+            u8g2.sendBuffer();
+        }
         break;
     case 4:
         u8g2.setFont(u8g2_font_profont12_tr);
