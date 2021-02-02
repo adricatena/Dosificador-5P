@@ -43,7 +43,7 @@ void loop()
     }
     break;
   case 100: // Mostrar Menu Principal
-    cantidad = 2;
+    cantidad = 3;
     seleccion = 1;
     drawMenuPrincipal();
     flag = 101; // Ir a mostrar selector
@@ -57,10 +57,26 @@ void loop()
     {
       if (digitalRead(encoderPinA) == LOW)
       { // Antirrebote
-        if (seleccion == 1)
-          seleccion = 2;
-        else if (seleccion == 2)
-          seleccion = 1;
+        if (digitalRead(encoderPinB) == HIGH)
+        {
+          if (digitalRead(encoderPinB) == HIGH)
+          {
+            if (seleccion < 3)
+              seleccion++;
+            else if (seleccion == 3)
+              seleccion = 1;
+          }
+        }
+        else if (digitalRead(encoderPinB == LOW)) // si B es LOW, sentido antihorario
+        {
+          if (digitalRead(encoderPinB == LOW))
+          {
+            if (seleccion > 1)
+              seleccion--;
+            else if (seleccion == 1)
+              seleccion = 3;
+          }
+        }
         drawMenuPrincipal();
         drawSelector(cantidad, seleccion);
       }
