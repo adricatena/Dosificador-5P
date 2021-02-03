@@ -195,7 +195,6 @@ void drawInstruccionesAgregarReceta()
     u8g2.drawStr(1, (u8g2.getAscent() + 1) * 6, "nivel que usted desee");
     u8g2.drawStr(1, (u8g2.getAscent() + 1) * 7, "VERDE - continuar");
     u8g2.drawStr(1, (u8g2.getAscent() + 1) * 8, "NEGRO - cancelar");
-    //u8g2.drawStr(1, (u8g2.getAscent() + 1) * 9, " si desea cancelar.");
     u8g2.sendBuffer();
 }
 
@@ -210,7 +209,7 @@ void drawPrueba()
     u8g2.sendBuffer();
 }
 
-void drawMensaje1(){
+void drawMensajeDestarando(){
     u8g2.clearBuffer();
     u8g2.clearDisplay();
     u8g2.setFont(u8g2_font_profont12_tr);
