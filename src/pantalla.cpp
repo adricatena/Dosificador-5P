@@ -185,13 +185,17 @@ void drawInstruccionesAgregarReceta()
 {
     u8g2.clearBuffer();
     u8g2.clearDisplay();
-    u8g2.setFont(u8g2_font_profont12_tr);
+    //u8g2.setFont(u8g2_font_profont10_tr); // 9 renglones
+    u8g2.setFont(u8g2_font_profont11_tr); // 8 renglones
     u8g2.drawStr(1, u8g2.getAscent() + 1, "Ubique el envase en");
-    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 2, "posicion de llenado");
-    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 3 + 5, "*Presione el selector");
-    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 4 + 5, " si desea continuar.");
-    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 6 - 1, "*Gire el selector");
-    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 7 - 1, " si desea cancelar.");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 2, "posicion de llenado y");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 3, "sin perdidas.");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 4, "Mantenga pulsado el");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 5, "boton verde hasta el");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 6, "nivel que usted desee");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 7, "VERDE - continuar");
+    u8g2.drawStr(1, (u8g2.getAscent() + 1) * 8, "NEGRO - cancelar");
+    //u8g2.drawStr(1, (u8g2.getAscent() + 1) * 9, " si desea cancelar.");
     u8g2.sendBuffer();
 }
 
