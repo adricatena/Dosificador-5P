@@ -2,14 +2,24 @@
 #include "globales.h"
 #include "pantalla.h"
 #include <EEPROM.h>
-#include <HX711.h>
 
 void setup()
 {
   setupPantalla();
-  pinMode(encoderPinA, INPUT_PULLUP);
-  pinMode(encoderPinB, INPUT_PULLUP);
-  pinMode(encoderBoton, INPUT_PULLUP);
+  pinMode(encoderPinA, INPUT);
+  pinMode(encoderPinB, INPUT);
+  pinMode(encoderBoton, INPUT);
+  pinMode(BTN_verde, INPUT_PULLUP);
+  pinMode(BTN_negro, INPUT_PULLUP);
+  pinMode(BOMBA, OUTPUT);
+  pinMode(EV1, OUTPUT);
+  pinMode(LUZ1r, OUTPUT);
+  pinMode(LUZ2v, OUTPUT);
+  balanza1.begin(DT1, SCK1);
+  balanza2.begin(DT2, SCK2);
+  balanza3.begin(DT3, SCK3);
+  balanza4.begin(DT4, SCK4);
+  balanza5.begin(DT5, SCK5);
   /*Iteracion para "resetear" EEPROM
   for(i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 255);
@@ -163,17 +173,19 @@ void loop()
     }
     break;
   case 211:                               // Espera para agregar receta o cancelar
-    if (digitalRead(encoderBoton) == LOW) // Agregar
+    if (digitalRead(BTN_verde) == LOW) // Agregar
     {
       flag = 212; // ir a accion de agregar receta
     }
-    else if (digitalRead(encoderPinA) == LOW) // Cancelar
+    else if (digitalRead(BTN_negro) == LOW) // Cancelar
       flag = 200;                             // ir a Mostrar Menu Recetas
     break;
   case 212: // Accion de agregar receta
-    drawMensaje1(); // 'No apoyar envases, destarando...'
-    
-    delay(6000);
+    drawMensajeDestarando(); // 'No apoyar envases, destarando...'
+    balanza1.set_scale(100.7562521); // Establecemos la ESCALA calculada anteriormente
+    balanza1.tare(20);               // El peso actual es considerado Tara.    
+    delay(1000);
+
     flag = 200;
     break;
   case 220: // Mostrar Mostrar Recetas
