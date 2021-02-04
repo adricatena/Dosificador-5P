@@ -7,3 +7,5 @@ void drawMaximoRecetas();
 void drawInstruccionesAgregarReceta();
 void drawPrueba();
 void drawMensajeDestarando();
+void drawMensajeCentrado(String palabra);
+void drawMensajeNuevoPeso(int d1, int d2, int d3, int d4, int digito);
