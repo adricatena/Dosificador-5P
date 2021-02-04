@@ -76,9 +76,9 @@ void drawSelector(int cantidad, int seleccion)
         }
         break;
     case 3:
-        y1 = u8g2.getAscent()+1 + ((alturaConTitulo-1)/3) - alto; // desfazaje del titulo + division dinamica - altura del cuadrado
-        y2 = u8g2.getAscent()+1 + ((alturaConTitulo-1)/3)*2 - alto;
-        y3 = u8g2.getAscent()+1 + ((alturaConTitulo-1)/3)*3 - alto;
+        y1 = u8g2.getAscent() + 1 + ((alturaConTitulo - 1) / 3) - alto; // desfazaje del titulo + division dinamica - altura del cuadrado
+        y2 = u8g2.getAscent() + 1 + ((alturaConTitulo - 1) / 3) * 2 - alto;
+        y3 = u8g2.getAscent() + 1 + ((alturaConTitulo - 1) / 3) * 3 - alto;
         if (seleccion == 1)
         {
             u8g2.drawBox(1, y1, alto, alto);
@@ -209,7 +209,8 @@ void drawPrueba()
     u8g2.sendBuffer();
 }
 
-void drawMensajeDestarando(){
+void drawMensajeDestarando()
+{
     u8g2.clearBuffer();
     u8g2.clearDisplay();
     u8g2.setFont(u8g2_font_profont12_tr);
@@ -217,5 +218,42 @@ void drawMensajeDestarando(){
     u8g2.drawStr(1, (u8g2.getAscent() + 1) * 2, "ENVASE SOBRE LA");
     u8g2.drawStr(1, (u8g2.getAscent() + 1) * 3, "BALANZA.");
     u8g2.drawStr(1, (u8g2.getAscent() + 1) * 5, "DESTARANDO...");
+    u8g2.sendBuffer();
+}
+
+void drawMensajeCentrado(String palabra)
+{
+    u8g2.clearBuffer();                   // clear the internal memory
+    u8g2.setFont(u8g2_font_profont17_tr); // choose a suitable font
+    char caracteres[palabra.length() + 1];
+    palabra.toCharArray(caracteres, palabra.length() + 1);
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth(caracteres)) / 2;
+    int centroY = (u8g2.getDisplayHeight() + u8g2.getAscent()) / 2;
+    u8g2.drawStr(centroX, centroY, caracteres); // write something to the internal memory
+    u8g2.sendBuffer();
+}
+
+void drawMensajeNuevoPeso(int d1, int d2, int d3, int d4, int digito)
+{
+    String peso = "PESO:  " + String(d1) + " " + String(d2) + " " + String(d3) + " " + String(d4) + " " + "  gr";
+    char caracteres[peso.length() + 1];
+    peso.toCharArray(caracteres, peso.length() + 1);
+    u8g2.clearBuffer();
+    //u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    altoFila = alturaConTitulo / 3 - 1;
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("RECETA NUEVA")) / 2;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth(caracteres)) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("VERDE - Aceptar")) / 2;
+    int x3 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("NEGRO - Cancelar")) / 2;
+    int ancho = u8g2.getStrWidth("9 ");
+    u8g2.drawStr(centroX, u8g2.getAscent() + 1, "RECETA NUEVA");
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila, caracteres);
+    x1 = x1 + u8g2.getStrWidth("PESO:  ");
+    u8g2.drawHLine(x1 + ancho * (digito - 1) - 2, u8g2.getAscent() + 1 + altoFila + 1, ancho - 3);
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 2, "VERDE - Aceptar");
+    u8g2.drawStr(x3, u8g2.getAscent() + 1 + altoFila * 3, "NEGRO - Cancelar");
     u8g2.sendBuffer();
 }
