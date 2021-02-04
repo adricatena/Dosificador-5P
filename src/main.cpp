@@ -15,16 +15,42 @@ void setup()
   pinMode(EV1, OUTPUT);
   pinMode(LUZ1r, OUTPUT);
   pinMode(LUZ2v, OUTPUT);
+  pinMode(EV2, OUTPUT);
+  pinMode(LUZ2r, OUTPUT);
+  pinMode(LUZ2v, OUTPUT);
+  pinMode(EV3, OUTPUT);
+  pinMode(LUZ3r, OUTPUT);
+  pinMode(LUZ3v, OUTPUT);
+  pinMode(EV4, OUTPUT);
+  pinMode(LUZ4r, OUTPUT);
+  pinMode(LUZ4v, OUTPUT);
+  pinMode(EV5, OUTPUT);
+  pinMode(LUZ5r, OUTPUT);
+  pinMode(LUZ5v, OUTPUT);
   balanza1.begin(DT1, SCK1);
   balanza2.begin(DT2, SCK2);
   balanza3.begin(DT3, SCK3);
   balanza4.begin(DT4, SCK4);
   balanza5.begin(DT5, SCK5);
+  digitalWrite(EV1, LOW);
+  digitalWrite(LUZ1r, HIGH);
+  digitalWrite(LUZ1v, LOW);
+  digitalWrite(EV2, LOW);
+  digitalWrite(LUZ2r, HIGH);
+  digitalWrite(LUZ2v, LOW);
+  digitalWrite(EV3, LOW);
+  digitalWrite(LUZ3r, HIGH);
+  digitalWrite(LUZ3v, LOW);
+  digitalWrite(EV4, LOW);
+  digitalWrite(LUZ4r, HIGH);
+  digitalWrite(LUZ4v, LOW);
+  digitalWrite(EV5, LOW);
+  digitalWrite(LUZ5r, HIGH);
+  digitalWrite(LUZ5v, LOW);
   /*Iteracion para "resetear" EEPROM
   for(i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 255);
   }*/
-
   Serial.begin(9600);
   tamanoEstructura = sizeof(sReceta);
   for (i = 0; i < maximoRecetas; i++)
@@ -149,7 +175,15 @@ void loop()
       if (digitalRead(encoderBoton) == LOW)
       { // Antirrebote
         if (seleccion == 1)
+        {
+          d1 = 0;
+          d2 = 0;
+          d3 = 0;
+          d4 = 0;
+          digito = 1;
+          pesoNuevo = 0000;
           flag = 210; // ir a Mostrar Agregar Receta
+        }
         else if (seleccion == 2)
           flag = 220; // ir a Mostrar Mostrar Recetas
         else if (seleccion == 3)
@@ -168,25 +202,130 @@ void loop()
     }
     else
     {
-      drawInstruccionesAgregarReceta();
+      drawMensajeNuevoPeso(d1, d2, d3, d4, digito);
       flag = 211; // ir a espera para agregar receta o cancelar
     }
     break;
-  case 211:                               // Espera para agregar receta o cancelar
+  case 211:                            // Espera para agregar receta o cancelar
     if (digitalRead(BTN_verde) == LOW) // Agregar
     {
-      flag = 212; // ir a accion de agregar receta
+      pesoNuevo = d1*1000 + d2*100 + d3*10 + d4;
+      if(pesoNuevo == 0){
+        
+      }
+      Serial.println(pesoNuevo);
+      flag = 200; // ir a accion de guardar receta
     }
     else if (digitalRead(BTN_negro) == LOW) // Cancelar
-      flag = 200;                             // ir a Mostrar Menu Recetas
+      flag = 200;                           // ir a Mostrar Menu Recetas
+    else if (digitalRead(encoderPinA) == LOW)
+    {
+      if (digitalRead(encoderPinB) == HIGH)
+      { // Sentido Horario
+        if (digito == 1)
+        {
+          if (d1 < 9)
+            d1++;
+          else if (d1 == 9)
+            d1 = 0;
+        }
+        else if (digito == 2)
+        {
+          if (d2 < 9)
+            d2++;
+          else if (d2 == 9)
+            d2 = 0;
+        }
+        else if (digito == 3)
+        {
+          if (d3 < 9)
+            d3++;
+          else if (d3 == 9)
+            d3 = 0;
+        }
+        else if (digito == 4)
+        {
+          if (d4 < 9)
+            d4++;
+          else if (d4 == 9)
+            d4 = 0;
+        }
+      }
+      else if (digitalRead(encoderPinB) == LOW)
+      { // Sentido Antihorario
+        if (digito == 1)
+        {
+          if (d1 > 0)
+            d1--;
+          else if (d1 == 0)
+            d1 = 9;
+        }
+        else if (digito == 2)
+        {
+          if (d2 > 0)
+            d2--;
+          else if (d2 == 0)
+            d2 = 9;
+        }
+        else if (digito == 3)
+        {
+          if (d3 > 0)
+            d3--;
+          else if (d3 == 0)
+            d3 = 9;
+        }
+        else if (digito == 4)
+        {
+          if (d4 > 0)
+            d4--;
+          else if (d4 == 0)
+            d4 = 9;
+        }
+      }
+      flag = 210;
+    }
+    else if (digitalRead(encoderBoton) == LOW)
+      if (digitalRead(encoderBoton) == LOW)
+        if (digitalRead(encoderBoton) == LOW)
+        { // Boton encoder
+          if (digito < 4)
+            digito++;
+          else if (digito == 4)
+            digito = 1;
+          flag = 210;
+        }
     break;
-  case 212: // Accion de agregar receta
-    drawMensajeDestarando(); // 'No apoyar envases, destarando...'
-    balanza1.set_scale(100.7562521); // Establecemos la ESCALA calculada anteriormente
-    balanza1.tare(20);               // El peso actual es considerado Tara.    
-    delay(1000);
+  case 212:                  // Accion de agregar receta
 
-    flag = 200;
+    break;
+  case 213:
+    t1 = millis();
+    t2 = t1;
+    while ((t2 - t1) < 10000 && digitalRead(BTN_verde))
+    {
+      t2 = millis();
+    }
+    if ((t2 - t1) >= 10000)
+    {
+      recetaNueva = false;
+      agotoEspera = true;
+    }
+    else if (!digitalRead(BTN_verde))
+    {
+      digitalWrite(LUZ1r, LOW);
+      digitalWrite(LUZ1v, HIGH);
+      drawMensajeCentrado("MARCHA");
+      digitalWrite(EV1, HIGH);
+      while (!digitalRead(BTN_verde))
+      {
+      }
+      digitalWrite(EV1, LOW);
+      digitalWrite(LUZ1v, LOW);
+      digitalWrite(LUZ1r, HIGH);
+      //pesoNuevo = balanza1.get_units(50);
+      pesoNuevo = 4987;
+      //drawMensajeNuevoPeso(pesoNuevo);
+    }
     break;
   case 220: // Mostrar Mostrar Recetas
     break;
