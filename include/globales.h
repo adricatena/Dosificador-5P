@@ -18,7 +18,19 @@
 #define BOMBA 32
 #define EV1 33
 #define LUZ1r 34
-#define LUZ2v 35
+#define LUZ1v 35
+#define EV2 36
+#define LUZ2r 37
+#define LUZ2v 38
+#define EV3 39
+#define LUZ3r 40
+#define LUZ3v 41
+#define EV4 42
+#define LUZ4r 43
+#define LUZ4v 44
+#define EV5 45
+#define LUZ5r 46
+#define LUZ5v 47
 
 HX711 balanza1, balanza2, balanza3, balanza4, balanza5;
 
@@ -26,7 +38,12 @@ unsigned int flag = 0;
 unsigned int seleccion = 1; // Seleccion de item
 unsigned int cantidad = 2;  // Cantidad de items de un menu
 
-const int maximoRecetas = 10;
+unsigned long t1, t2;
+bool recetaNueva, agotoEspera;
+unsigned int pesoNuevo;
+int d1=0, d2=0, d3=0, d4=0, digito=1;
+
+const int maximoRecetas = 12;
 struct sReceta
 {
     unsigned int numeroReceta;
