@@ -5,15 +5,15 @@
 #define encoderBoton 4
 #define BTN_verde 14
 #define BTN_negro 15
-#define DT1 22  // Celda 1
+#define DT1 22 // Celda 1
 #define SCK1 23
-#define DT2 24  // Celda 2
+#define DT2 24 // Celda 2
 #define SCK2 25
-#define DT3 26  // Celda 3
+#define DT3 26 // Celda 3
 #define SCK3 27
-#define DT4 28  // Celda 4
+#define DT4 28 // Celda 4
 #define SCK4 29
-#define DT5 30  // Celda 5
+#define DT5 30 // Celda 5
 #define SCK5 31
 #define BOMBA 32
 #define EV1 33
@@ -38,10 +38,8 @@ unsigned int flag = 0;
 unsigned int seleccion = 1; // Seleccion de item
 unsigned int cantidad = 2;  // Cantidad de items de un menu
 
-unsigned long t1, t2;
-bool recetaNueva, agotoEspera;
 unsigned int pesoNuevo;
-int d1=0, d2=0, d3=0, d4=0, digito=1;
+int d1 = 0, d2 = 0, d3 = 0, d4 = 0, digito = 1;
 
 const int maximoRecetas = 12;
 struct sReceta
@@ -53,5 +51,8 @@ struct sReceta
 sReceta aRecetas[maximoRecetas];
 int recetasGuardadas = 0;
 int tamanoEstructura;
+int paginaRecetas = 1;
 
 int i = 0;
+
+void recetasAMostrar();
