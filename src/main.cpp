@@ -184,9 +184,17 @@ void loop()
           flag = 210; // ir a Mostrar Agregar Receta
         }
         else if (seleccion == 2)
+        {
+          paginaRecetas = 1;
           flag = 220; // ir a Mostrar Mostrar Recetas
+        }
         else if (seleccion == 3)
+        {
+          d1 = 0;
+          d2 = 0;
+          digito = 1;
           flag = 230; // ir a Mostrar Eliminar Recetas
+        }
         else if (seleccion == 4)
           flag = 100; // ir a Mostrar Menu Principal
       }
@@ -348,6 +356,94 @@ void loop()
     }
     break;
   case 230: // Mostrar Eliminar Recetas
+    if (recetasGuardadas == 0)
+    {
+      drawSinRecetas();
+      delay(7000);
+      flag = 200;
+    }
+    else
+    {
+      drawEliminarReceta(d1, d2, digito);
+      flag = 231; // ir a Espera para cambiar numero a eliminar o cancelar
+    }
+    break;
+  case 231:                            // Espera para cambiar nro a eliminar o cancelar
+    if (digitalRead(BTN_verde) == LOW) // Borrar
+    {
+      borrarReceta = d1 * 10 + d2;
+      if (borrarReceta == 0 || borrarReceta > recetasGuardadas)
+      {
+        drawErrorEliminarReceta();
+        delay(7000);
+        flag = 200;
+      }
+      else
+        flag = 232; // ir a accion de eliminar receta
+    }
+    else if (digitalRead(BTN_negro) == LOW) // Cancelar
+      flag = 200;                           // ir a Mostrar Menu Recetas
+    else if (digitalRead(encoderPinA) == LOW)
+    {
+      delay(10); // antirrebote
+      if (digitalRead(encoderPinA) == LOW)
+      {
+        if (digitalRead(encoderPinB) == HIGH)
+        { // Sentido Horario
+          if (digito == 1)
+          {
+            if (d1 < 9)
+              d1++;
+            else if (d1 == 9)
+              d1 = 0;
+          }
+          else if (digito == 2)
+          {
+            if (d2 < 9)
+              d2++;
+            else if (d2 == 9)
+              d2 = 0;
+          }
+        }
+        else if (digitalRead(encoderPinB) == LOW)
+        { // Sentido Antihorario
+          if (digito == 1)
+          {
+            if (d1 > 0)
+              d1--;
+            else if (d1 == 0)
+              d1 = 9;
+          }
+          else if (digito == 2)
+          {
+            if (d2 > 0)
+              d2--;
+            else if (d2 == 0)
+              d2 = 9;
+          }
+        }
+        flag = 230; // actualizar pantalla
+      }
+    }
+    else if (digitalRead(encoderBoton) == LOW)
+    {
+      delay(50); // antirrebote
+      if (digitalRead(encoderBoton) == LOW)
+      { // Boton encoder
+        if (digito == 1)
+          digito++;
+        else if (digito == 2)
+          digito--;
+        flag = 230; // actualizar pantalla
+      }
+    }
+    break;
+  case 232:
+
+    Serial.print("Eliminar receta ");
+    Serial.println(borrarReceta);
+    delay(5000);
+    flag = 200;
     break;
   case 300: // Menu Marcha
     break;
