@@ -47,24 +47,33 @@ void setup()
   digitalWrite(EV5, LOW);
   digitalWrite(LUZ5r, HIGH);
   digitalWrite(LUZ5v, LOW);
-  /*Iteracion para "resetear" EEPROM
-  for(i = 0; i < EEPROM.length(); i++) {
+  //Iteracion para "resetear" EEPROM
+  /* for(i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 255);
-  }*/
+  } */
   Serial.begin(9600);
   tamanoEstructura = sizeof(sReceta);
+  Serial.println("------------INICIO EEPROM-------------");
   for (i = 0; i < maximoRecetas; i++)
   {
     EEPROM.get(tamanoEstructura * i, aRecetas[i]);
+    Serial.print("Iteracion: ");
     Serial.println(i);
+    Serial.print("Nro receta: ");
     Serial.println(aRecetas[i].numeroReceta);
+    Serial.print("Peso: ");
     Serial.println(aRecetas[i].pesoProducto);
+    Serial.print("Volumen: ");
     Serial.println(aRecetas[i].volumenProducto);
+    Serial.println();
     if (aRecetas[i].numeroReceta < 65535)
       recetasGuardadas++;
   }
+  Serial.print("Tamaño de estructura: ");
   Serial.println(tamanoEstructura);
+  Serial.print("Recetas guardadas: ");
   Serial.println(recetasGuardadas);
+  Serial.println("------------FIN EEPROM-------------");
   delay(2000);
   drawInicio();
 }
@@ -75,9 +84,7 @@ void loop()
   {
   case 0: // Espera de tecla de inicio
     if (digitalRead(encoderPinA) == LOW || digitalRead(encoderBoton) == LOW)
-    {
       flag = 100; // ir a mostrar menu principal
-    }
     break;
   case 100: // Mostrar Menu Principal
     cantidad = 3;
@@ -92,27 +99,22 @@ void loop()
   case 102: // Espera tecla Menu Principal
     if (digitalRead(encoderPinA) == LOW)
     {
+      delay(20); // antirrebote
       if (digitalRead(encoderPinA) == LOW)
-      { // Antirrebote
+      {
         if (digitalRead(encoderPinB) == HIGH)
         {
-          if (digitalRead(encoderPinB) == HIGH)
-          {
-            if (seleccion < 3)
-              seleccion++;
-            else if (seleccion == 3)
-              seleccion = 1;
-          }
+          if (seleccion < 3)
+            seleccion++;
+          else if (seleccion == 3)
+            seleccion = 1;
         }
         else if (digitalRead(encoderPinB == LOW)) // si B es LOW, sentido antihorario
         {
-          if (digitalRead(encoderPinB == LOW))
-          {
-            if (seleccion > 1)
-              seleccion--;
-            else if (seleccion == 1)
-              seleccion = 3;
-          }
+          if (seleccion > 1)
+            seleccion--;
+          else if (seleccion == 1)
+            seleccion = 3;
         }
         drawMenuPrincipal();
         drawSelector(cantidad, seleccion);
@@ -120,8 +122,9 @@ void loop()
     }
     if (digitalRead(encoderBoton) == LOW)
     {
+      delay(50); // Antirrebote
       if (digitalRead(encoderBoton) == LOW)
-      { // Antirrebote
+      {
         if (seleccion == 1)
           flag = 200; // ir a Mostrar Menu Recetas
         else if (seleccion == 2)
@@ -144,27 +147,22 @@ void loop()
   case 202: // Espera tecla Menu Recetas
     if (digitalRead(encoderPinA) == LOW)
     {
+      delay(10); // antirrebote
       if (digitalRead(encoderPinA) == LOW)
-      {                                       // Antirrebote
+      {
         if (digitalRead(encoderPinB) == HIGH) // si B es HIGH, sentido horario
         {
-          if (digitalRead(encoderPinB) == HIGH)
-          { // Antirrebote
-            if (seleccion < 4)
-              seleccion++;
-            else if (seleccion == 4)
-              seleccion = 1;
-          }
+          if (seleccion < 4)
+            seleccion++;
+          else if (seleccion == 4)
+            seleccion = 1;
         }
         else if (digitalRead(encoderPinB == LOW)) // si B es LOW, sentido antihorario
         {
-          if (digitalRead(encoderPinB == LOW))
-          {
-            if (seleccion > 1)
-              seleccion--;
-            else if (seleccion == 1)
-              seleccion = 4;
-          }
+          if (seleccion > 1)
+            seleccion--;
+          else if (seleccion == 1)
+            seleccion = 4;
         }
         drawMenuRecetas();
         drawSelector(cantidad, seleccion);
@@ -172,8 +170,9 @@ void loop()
     }
     if (digitalRead(encoderBoton) == LOW)
     {
+      delay(50); // antirrebote
       if (digitalRead(encoderBoton) == LOW)
-      { // Antirrebote
+      {
         if (seleccion == 1)
         {
           d1 = 0;
@@ -209,12 +208,15 @@ void loop()
   case 211:                            // Espera para agregar receta o cancelar
     if (digitalRead(BTN_verde) == LOW) // Agregar
     {
-      pesoNuevo = d1*1000 + d2*100 + d3*10 + d4;
-      if(pesoNuevo == 0){
-        
+      pesoNuevo = d1 * 1000 + d2 * 100 + d3 * 10 + d4;
+      if (pesoNuevo == 0)
+      {
+        drawErrorAgregarReceta();
+        delay(7000);
+        flag = 210;
       }
-      Serial.println(pesoNuevo);
-      flag = 200; // ir a accion de guardar receta
+      else
+        flag = 212; // ir a accion de guardar receta
     }
     else if (digitalRead(BTN_negro) == LOW) // Cancelar
       flag = 200;                           // ir a Mostrar Menu Recetas
@@ -285,49 +287,65 @@ void loop()
       flag = 210;
     }
     else if (digitalRead(encoderBoton) == LOW)
+    {
+      delay(50); // antirrebote
       if (digitalRead(encoderBoton) == LOW)
-        if (digitalRead(encoderBoton) == LOW)
-        { // Boton encoder
-          if (digito < 4)
-            digito++;
-          else if (digito == 4)
-            digito = 1;
-          flag = 210;
-        }
-    break;
-  case 212:                  // Accion de agregar receta
-
-    break;
-  case 213:
-    t1 = millis();
-    t2 = t1;
-    while ((t2 - t1) < 10000 && digitalRead(BTN_verde))
-    {
-      t2 = millis();
-    }
-    if ((t2 - t1) >= 10000)
-    {
-      recetaNueva = false;
-      agotoEspera = true;
-    }
-    else if (!digitalRead(BTN_verde))
-    {
-      digitalWrite(LUZ1r, LOW);
-      digitalWrite(LUZ1v, HIGH);
-      drawMensajeCentrado("MARCHA");
-      digitalWrite(EV1, HIGH);
-      while (!digitalRead(BTN_verde))
-      {
+      { // Boton encoder
+        if (digito < 4)
+          digito++;
+        else if (digito == 4)
+          digito = 1;
+        flag = 210;
       }
-      digitalWrite(EV1, LOW);
-      digitalWrite(LUZ1v, LOW);
-      digitalWrite(LUZ1r, HIGH);
-      //pesoNuevo = balanza1.get_units(50);
-      pesoNuevo = 4987;
-      //drawMensajeNuevoPeso(pesoNuevo);
     }
+    break;
+  case 212: // Accion de agregar receta
+    drawRecetaCorrecta(recetasGuardadas + 1);
+    aRecetas[recetasGuardadas].numeroReceta = recetasGuardadas + 1;
+    aRecetas[recetasGuardadas].pesoProducto = pesoNuevo;
+    EEPROM.put(tamanoEstructura * recetasGuardadas, aRecetas[recetasGuardadas]);
+    recetasGuardadas++;
+    delay(6000);
+    flag = 200;
     break;
   case 220: // Mostrar Mostrar Recetas
+    if (recetasGuardadas == 0)
+    {
+      drawSinRecetas();
+      delay(7000);
+      flag = 200;
+    }
+    else
+    {
+      recetasAMostrar();
+      flag = 221; // Ir a Espera para cambiar paginas o salir
+    }
+    break;
+  case 221: // Espera para cambiar de paginas o salir de Mostrar recetas
+    if (digitalRead(BTN_negro) == LOW || digitalRead(BTN_verde) == LOW)
+      flag = 200;
+    else if (digitalRead(encoderPinA) == LOW)
+    {
+      delay(10); // antirrebote
+      if (digitalRead(encoderPinA) == LOW)
+      {
+        if (digitalRead(encoderPinB) == HIGH)
+        { // Sentido Horario
+          if (paginaRecetas < 3)
+            paginaRecetas++;
+          else if (paginaRecetas == 3)
+            paginaRecetas = 1;
+        }
+        else if (digitalRead(encoderPinB) == LOW)
+        { // Sentido Antihorario
+          if (paginaRecetas > 1)
+            paginaRecetas--;
+          else if (paginaRecetas == 1)
+            paginaRecetas = 3;
+        }
+      }
+      flag = 220;
+    }
     break;
   case 230: // Mostrar Eliminar Recetas
     break;
@@ -338,4 +356,22 @@ void loop()
   default:
     break;
   }
+}
+
+void recetasAMostrar()
+{
+  int pesos[4];
+  int aux;
+  if (paginaRecetas == 1)
+    aux = 0;
+  else if (paginaRecetas == 2)
+    aux = 4;
+  else if (paginaRecetas == 3)
+    aux = 8;
+  for (int i = 0; i < 4; i++)
+  {
+    pesos[i] = aRecetas[aux].pesoProducto;
+    aux++;
+  }
+  drawMostrarRecetas(pesos, paginaRecetas, aux - 4);
 }
