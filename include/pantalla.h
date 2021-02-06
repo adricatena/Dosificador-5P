@@ -13,3 +13,5 @@ void drawErrorAgregarReceta();
 void drawRecetaCorrecta(int nroReceta);
 void drawSinRecetas();
 void drawMostrarRecetas(int recetas[], int pagina, int aux);
+void drawEliminarReceta(int d1, int d2, int digito);
+void drawErrorEliminarReceta();
