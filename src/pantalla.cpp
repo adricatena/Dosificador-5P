@@ -10,6 +10,7 @@ U8G2_ST7920_128X64_F_SW_SPI u8g2(U8G2_R0, /* clock=*/52, /* data=*/51, /* CS=*/5
 
 int alturaConTitulo;
 int altoFila;
+int filas;
 
 void setupPantalla()
 {
@@ -235,7 +236,7 @@ void drawMensajeCentrado(String palabra)
 
 void drawMensajeNuevoPeso(int d1, int d2, int d3, int d4, int digito)
 {
-    String peso = "PESO:  " + String(d1) + " " + String(d2) + " " + String(d3) + " " + String(d4) + " " + "  gr";
+    String peso = "PESO: " + String(d1) + " " + String(d2) + " " + String(d3) + " " + String(d4) + " gr";
     char caracteres[peso.length() + 1];
     peso.toCharArray(caracteres, peso.length() + 1);
     u8g2.clearBuffer();
@@ -251,9 +252,94 @@ void drawMensajeNuevoPeso(int d1, int d2, int d3, int d4, int digito)
     u8g2.drawStr(centroX, u8g2.getAscent() + 1, "RECETA NUEVA");
     u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
     u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila, caracteres);
-    x1 = x1 + u8g2.getStrWidth("PESO:  ");
+    x1 = x1 + u8g2.getStrWidth("PESO: ");
     u8g2.drawHLine(x1 + ancho * (digito - 1) - 2, u8g2.getAscent() + 1 + altoFila + 1, ancho - 3);
     u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 2, "VERDE - Aceptar");
     u8g2.drawStr(x3, u8g2.getAscent() + 1 + altoFila * 3, "NEGRO - Cancelar");
+    u8g2.sendBuffer();
+}
+
+void drawErrorAgregarReceta()
+{
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    filas = 5;
+    altoFila = alturaConTitulo / filas - 1;
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("ERROR")) / 2;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("NO PUEDE AGREGAR")) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("RECETAS SIN PESO")) / 2;
+    u8g2.drawStr(centroX, u8g2.getAscent() + 1, "ERROR");
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila * 2, "NO PUEDE AGREGAR");
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 3, "RECETAS SIN PESO");
+    u8g2.sendBuffer();
+}
+
+void drawRecetaCorrecta(int nroReceta)
+{
+    String cadena = "RECETA Nro " + String(nroReceta);
+    char caracteres[cadena.length() + 1];
+    cadena.toCharArray(caracteres, cadena.length() + 1);
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    filas = 5;
+    altoFila = u8g2.getDisplayHeight() / filas - 1;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth(caracteres)) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("GUARDADA CON EXITO")) / 2;
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila * 2, caracteres);
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 4, "GUARDADA CON EXITO");
+    u8g2.sendBuffer();
+}
+
+void drawSinRecetas()
+{
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    filas = 5;
+    altoFila = alturaConTitulo / filas - 1;
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("ERROR")) / 2;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("NO HAY RECETAS")) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("GUARDADAS")) / 2;
+    u8g2.drawStr(centroX, u8g2.getAscent() + 1, "ERROR");
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila * 2, "NO HAY RECETAS");
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 3, "GUARDADAS");
+    u8g2.sendBuffer();
+}
+
+void drawMostrarRecetas(int recetas[], int pagina, int aux)
+{
+    String cadena;
+    char caracteres[22];
+    int x, ancho = u8g2.getDisplayWidth();
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    filas = 5;
+    altoFila = alturaConTitulo / filas - 1;
+    cadena = "RECETAS  -  pag " + String(pagina) + "/3";
+    char titulo[cadena.length() + 1];
+    cadena.toCharArray(titulo, cadena.length() + 1);
+    x = (ancho - u8g2.getStrWidth(titulo)) / 2;
+    u8g2.drawStr(x, u8g2.getAscent() + 1, titulo);
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    for (int i = 0; i < 4; i++)
+    {
+        cadena = "Receta Nro " + String(i + 1 + aux) + ": ";
+        if (recetas[i] < 1 || recetas[i] > 9999)
+            cadena += "VACIA   ";
+        else
+            cadena += String(recetas[i]) + " gr";
+        cadena.toCharArray(caracteres, cadena.length() + 1);
+        u8g2.drawStr(1, u8g2.getAscent() + 2 + altoFila * (i + 1), caracteres);
+    }
+    x = ancho - u8g2.getStrWidth("Verde/Negro - Volver");
+    u8g2.drawStr(x - 1, u8g2.getDisplayHeight() - 1, "Verde/Negro - Volver");
     u8g2.sendBuffer();
 }
