@@ -52,6 +52,7 @@ sReceta aRecetas[maximoRecetas];
 int recetasGuardadas = 0;
 int tamanoEstructura;
 int paginaRecetas = 1;
+int borrarReceta;
 
 int i = 0;
 
