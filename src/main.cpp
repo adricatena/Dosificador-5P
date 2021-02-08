@@ -308,10 +308,15 @@ void loop()
     }
     break;
   case 212: // Accion de agregar receta
-    drawRecetaCorrecta(recetasGuardadas + 1);
-    aRecetas[recetasGuardadas].numeroReceta = recetasGuardadas + 1;
-    aRecetas[recetasGuardadas].pesoProducto = pesoNuevo;
-    EEPROM.put(tamanoEstructura * recetasGuardadas, aRecetas[recetasGuardadas]);
+    i = 0;
+    while (aRecetas[i].pesoProducto != 65535 && i < 12)
+    {
+      i++;
+    }
+    drawRecetaCorrecta(i + 1);
+    aRecetas[i].numeroReceta = i + 1;
+    aRecetas[i].pesoProducto = pesoNuevo;
+    EEPROM.put(tamanoEstructura * i, aRecetas[i]);
     recetasGuardadas++;
     delay(6000);
     flag = 200;
@@ -372,7 +377,7 @@ void loop()
     if (digitalRead(BTN_verde) == LOW) // Borrar
     {
       borrarReceta = d1 * 10 + d2;
-      if (borrarReceta == 0 || borrarReceta > recetasGuardadas)
+      if (borrarReceta == 0 || borrarReceta > 12)
       {
         drawErrorEliminarReceta();
         delay(7000);
@@ -439,11 +444,23 @@ void loop()
     }
     break;
   case 232:
+    if (aRecetas[borrarReceta - 1].pesoProducto == 65535)
+    {
+      drawErrorRecetaVacia();
+      delay(6000);
+      flag = 230;
+    }
+    else
+    {
+      drawRecetaEliminada(borrarReceta);
+      aRecetas[borrarReceta - 1].numeroReceta = 65535;
+      aRecetas[borrarReceta - 1].pesoProducto = 65535;
+      EEPROM.put(tamanoEstructura * (borrarReceta - 1), aRecetas[borrarReceta - 1]);
+      recetasGuardadas--;
+      delay(5000);
+      flag = 200;
+    }
 
-    Serial.print("Eliminar receta ");
-    Serial.println(borrarReceta);
-    delay(5000);
-    flag = 200;
     break;
   case 300: // Menu Marcha
     break;
