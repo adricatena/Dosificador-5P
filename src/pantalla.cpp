@@ -418,3 +418,43 @@ void drawRecetaEliminada(int nroReceta)
     u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 4, "ELIMINADA CON EXITO");
     u8g2.sendBuffer();
 }
+
+void drawMarchaReceta(int d1, int d2, int digito){
+    String receta = "RECETA Nro: " + String(d1) + " " + String(d2);
+    char caracteres[receta.length() + 1];
+    receta.toCharArray(caracteres, receta.length() + 1);
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    altoFila = alturaConTitulo / 3 - 1;
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("MARCHA RECETA")) / 2;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth(caracteres)) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("VERDE - Aceptar")) / 2;
+    int x3 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("NEGRO - Cancelar")) / 2;
+    int ancho = u8g2.getStrWidth("9 ");
+    u8g2.drawStr(centroX, u8g2.getAscent() + 1, "MARCHA RECETA");
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila, caracteres);
+    x1 = x1 + u8g2.getStrWidth("RECETA Nro: ");
+    u8g2.drawHLine(x1 + ancho * (digito - 1) - 2, u8g2.getAscent() + 1 + altoFila + 1, ancho - 3);
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 2, "VERDE - Aceptar");
+    u8g2.drawStr(x3, u8g2.getAscent() + 1 + altoFila * 3, "NEGRO - Cancelar");
+    u8g2.sendBuffer();
+}
+
+void drawErrorMarchaReceta(){
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    filas = 5;
+    altoFila = alturaConTitulo / filas - 1;
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("ERROR")) / 2;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("NO EXISTE EL")) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth(" Nro DE RECETA")) / 2;
+    u8g2.drawStr(centroX, u8g2.getAscent() + 1, "ERROR");
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila * 2, "NO EXISTE EL");
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 3, "Nro DE RECETA");
+    u8g2.sendBuffer();
+}
