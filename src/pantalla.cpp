@@ -344,7 +344,8 @@ void drawMostrarRecetas(int recetas[], int pagina, int aux)
     u8g2.sendBuffer();
 }
 
-void drawEliminarReceta(int d1, int d2, int digito){
+void drawEliminarReceta(int d1, int d2, int digito)
+{
     String receta = "RECETA Nro: " + String(d1) + " " + String(d2);
     char caracteres[receta.length() + 1];
     receta.toCharArray(caracteres, receta.length() + 1);
@@ -367,7 +368,8 @@ void drawEliminarReceta(int d1, int d2, int digito){
     u8g2.sendBuffer();
 }
 
-void drawErrorEliminarReceta(){
+void drawErrorEliminarReceta()
+{
     u8g2.clearBuffer();
     u8g2.clearDisplay();
     u8g2.setFont(u8g2_font_profont12_tr);
@@ -381,5 +383,38 @@ void drawErrorEliminarReceta(){
     u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
     u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila * 2, "NO EXISTE EL");
     u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 3, "Nro DE RECETA");
+    u8g2.sendBuffer();
+}
+
+void drawErrorRecetaVacia()
+{
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    alturaConTitulo = u8g2.getDisplayHeight() - u8g2.getAscent() + 1;
+    filas = 3;
+    altoFila = (alturaConTitulo / filas) - 1;
+    int centroX = (u8g2.getDisplayWidth() - u8g2.getStrWidth("ERROR")) / 2;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("RECETA VACIA")) / 2;
+    u8g2.drawStr(centroX, u8g2.getAscent() + 1, "ERROR");
+    u8g2.drawHLine(0, u8g2.getAscent() + 2, u8g2.getDisplayWidth());
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + (altoFila), "RECETA VACIA");
+    u8g2.sendBuffer();
+}
+
+void drawRecetaEliminada(int nroReceta)
+{
+    String cadena = "RECETA Nro " + String(nroReceta);
+    char caracteres[cadena.length() + 1];
+    cadena.toCharArray(caracteres, cadena.length() + 1);
+    u8g2.clearBuffer();
+    u8g2.clearDisplay();
+    u8g2.setFont(u8g2_font_profont12_tr);
+    filas = 5;
+    altoFila = u8g2.getDisplayHeight() / filas - 1;
+    int x1 = (u8g2.getDisplayWidth() - u8g2.getStrWidth(caracteres)) / 2;
+    int x2 = (u8g2.getDisplayWidth() - u8g2.getStrWidth("ELIMINADA CON EXITO")) / 2;
+    u8g2.drawStr(x1, u8g2.getAscent() + 1 + altoFila * 2, caracteres);
+    u8g2.drawStr(x2, u8g2.getAscent() + 1 + altoFila * 4, "ELIMINADA CON EXITO");
     u8g2.sendBuffer();
 }
