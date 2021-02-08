@@ -9,6 +9,16 @@ void setup()
   pinMode(encoderPinA, INPUT);
   pinMode(encoderPinB, INPUT);
   pinMode(encoderBoton, INPUT);
+  pinMode(s1_trig, OUTPUT);
+  pinMode(s1_echo, INPUT);
+  pinMode(s2_trig, OUTPUT);
+  pinMode(s2_echo, INPUT);
+  pinMode(s3_trig, OUTPUT);
+  pinMode(s3_echo, INPUT);
+  pinMode(s4_trig, OUTPUT);
+  pinMode(s4_echo, INPUT);
+  pinMode(s5_trig, OUTPUT);
+  pinMode(s5_echo, INPUT);
   pinMode(BTN_verde, INPUT_PULLUP);
   pinMode(BTN_negro, INPUT_PULLUP);
   pinMode(BOMBA, OUTPUT);
@@ -128,7 +138,12 @@ void loop()
         if (seleccion == 1)
           flag = 200; // ir a Mostrar Menu Recetas
         else if (seleccion == 2)
+        {
+          d1 = 0;
+          d2 = 0;
+          digito = 1;
           flag = 300; // ir a Mostrar Menu Marcha
+        }
         else if (seleccion == 3)
           flag = 400; // ir a Mostrar Menu Lavado
       }
@@ -460,9 +475,106 @@ void loop()
       delay(5000);
       flag = 200;
     }
-
     break;
   case 300: // Menu Marcha
+    if (recetasGuardadas == 0)
+    {
+      drawSinRecetas();
+      delay(7000);
+      flag = 200;
+    }
+    else
+    {
+      drawMarchaReceta(d1, d2, digito);
+      flag = 301; // ir a Espera para cambiar numero a marchar o cancelar
+    }
+    break;
+  case 301:                            // Espera para cambiar nro a marchar o cancelar
+    if (digitalRead(BTN_verde) == LOW) // Borrar
+    {
+      borrarReceta = d1 * 10 + d2;
+      if (borrarReceta == 0 || borrarReceta > 12)
+      {
+        drawErrorMarchaReceta();
+        delay(7000);
+        flag = 100;
+      }
+      else
+        flag = 302; // ir a accion de marchar receta
+    }
+    else if (digitalRead(BTN_negro) == LOW) // Cancelar
+      flag = 100;                           // ir a Mostrar Menu Recetas
+    else if (digitalRead(encoderPinA) == LOW)
+    {
+      delay(10); // antirrebote
+      if (digitalRead(encoderPinA) == LOW)
+      {
+        if (digitalRead(encoderPinB) == HIGH)
+        { // Sentido Horario
+          if (digito == 1)
+          {
+            if (d1 < 9)
+              d1++;
+            else if (d1 == 9)
+              d1 = 0;
+          }
+          else if (digito == 2)
+          {
+            if (d2 < 9)
+              d2++;
+            else if (d2 == 9)
+              d2 = 0;
+          }
+        }
+        else if (digitalRead(encoderPinB) == LOW)
+        { // Sentido Antihorario
+          if (digito == 1)
+          {
+            if (d1 > 0)
+              d1--;
+            else if (d1 == 0)
+              d1 = 9;
+          }
+          else if (digito == 2)
+          {
+            if (d2 > 0)
+              d2--;
+            else if (d2 == 0)
+              d2 = 9;
+          }
+        }
+        flag = 300; // actualizar pantalla
+      }
+    }
+    else if (digitalRead(encoderBoton) == LOW)
+    {
+      delay(50); // antirrebote
+      if (digitalRead(encoderBoton) == LOW)
+      { // Boton encoder
+        if (digito == 1)
+          digito++;
+        else if (digito == 2)
+          digito--;
+        flag = 300; // actualizar pantalla
+      }
+    }
+    break;
+  case 302:
+    if (aRecetas[borrarReceta - 1].pesoProducto == 65535)
+    {
+      drawErrorRecetaVacia();
+      delay(6000);
+      flag = 300;
+    }
+    else
+    {
+      digitalWrite(s1_trig, HIGH);        // generacion del pulso a enviar
+      delay(1);                           // al pin conectado al trigger
+      digitalWrite(s1_trig, LOW);         // del sensor
+      duracion1 = pulseIn(s1_echo, HIGH); // con funcion pulseIn se espera un pulso
+                                          // alto en Echo
+      distancia1 = duracion1 / 58.2;
+    }
     break;
   case 400: // Menu Lavado
     break;
