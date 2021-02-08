@@ -3,6 +3,16 @@
 #define encoderPinA 2
 #define encoderPinB 3
 #define encoderBoton 4
+#define s1_trig 5 // Ultrasonido 1
+#define s1_echo 6
+#define s2_trig 7 // Ultrasonido 2
+#define s2_echo 8
+#define s3_trig 9 // Ultrasonido 3
+#define s3_echo 10
+#define s4_trig 11 // Ultrasonido 4
+#define s4_echo 12
+#define s5_trig 13 // Ultrasonido 5
+#define s5_echo 48
 #define BTN_verde 14
 #define BTN_negro 15
 #define DT1 22 // Celda 1
@@ -53,6 +63,9 @@ int recetasGuardadas = 0;
 int tamanoEstructura;
 int paginaRecetas = 1;
 int borrarReceta;
+
+int duracion1, duracion2, duracion3, duracion4, duracion5;
+float distancia1, distancia2, distancia3, distancia4, distancia5;
 
 int i = 0;
 
