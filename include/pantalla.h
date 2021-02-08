@@ -17,3 +17,5 @@ void drawEliminarReceta(int d1, int d2, int digito);
 void drawErrorEliminarReceta();
 void drawErrorRecetaVacia();
 void drawRecetaEliminada(int nroReceta);
+void drawMarchaReceta(int d1, int d2, int digito);
+void drawErrorMarchaReceta();
