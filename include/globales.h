@@ -70,3 +70,5 @@ float distancia1, distancia2, distancia3, distancia4, distancia5;
 int i = 0;
 
 void recetasAMostrar();
+void setupPines();
+void setupEprom();

@@ -5,7 +5,15 @@
 
 void setup()
 {
+  Serial.begin(9600);
   setupPantalla();
+  setupPines();
+  setupEprom();
+  delay(2000);
+  drawInicio();
+}
+
+void setupPines(){
   pinMode(encoderPinA, INPUT);
   pinMode(encoderPinB, INPUT);
   pinMode(encoderBoton, INPUT);
@@ -57,11 +65,13 @@ void setup()
   digitalWrite(EV5, LOW);
   digitalWrite(LUZ5r, HIGH);
   digitalWrite(LUZ5v, LOW);
+}
+
+void setupEprom(){
   //Iteracion para "resetear" EEPROM
   /* for(i = 0; i < EEPROM.length(); i++) {
     EEPROM.update(i, 255);
   } */
-  Serial.begin(9600);
   tamanoEstructura = sizeof(sReceta);
   Serial.println("------------INICIO EEPROM-------------");
   for (i = 0; i < maximoRecetas; i++)
@@ -84,8 +94,6 @@ void setup()
   Serial.print("Recetas guardadas: ");
   Serial.println(recetasGuardadas);
   Serial.println("------------FIN EEPROM-------------");
-  delay(2000);
-  drawInicio();
 }
 
 void loop()
